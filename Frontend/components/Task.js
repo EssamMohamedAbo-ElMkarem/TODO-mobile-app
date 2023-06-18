@@ -6,7 +6,7 @@ const Task = (props) => {
         <View style={styles.item}>
             <View style={styles.itemLeft}>
                 <TouchableOpacity style={styles.squared}></TouchableOpacity>
-                <Text style={styles.itemTitle}>{props.text}</Text>
+                <Text style={styles.itemTitle}>{props.text} {props.id}</Text>
             </View>
             <View style={styles.circular}></View>
         </View>

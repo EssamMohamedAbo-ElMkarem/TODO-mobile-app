@@ -20,7 +20,6 @@ mongoose
 
 db = mongoose.connection;
 
-// Curb Cores Error by adding a header here
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -35,9 +34,10 @@ app.use((req, res, next) => {
 });
 
 // body parser configuration
-app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json({ type: ['application/json', 'text/plain']}));
+app.use(express.urlencoded({
+  extended: true
+}))
 app.get("/", (request, response, next) => {
   response.json({ message: "Hey! This is your server response!" });
   next();
@@ -69,6 +69,8 @@ app.post("/register", (request, response) => {
 // login endpoint
 app.post("/login", (request, response) => {
   // check if email exists
+  console.log(request.body)
+
   User.findOne({ email: request.body.email })
 
     // if email exists
@@ -91,7 +93,7 @@ app.post("/login", (request, response) => {
           //   return success response
           response.status(200).send({
             message: "Login Successful",
-            tasks: user.tasks,
+            tasks: user,
           });
         })
         // catch error if password does not match

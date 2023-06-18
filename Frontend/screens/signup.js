@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [result, setResult] = useState("...");
@@ -37,16 +37,20 @@ const SignUp = () => {
       <TouchableOpacity style={styles.signupBtn} onPress={() => {
           try{
             fetch('http://192.168.1.5:3000/register', {
-              method: 'post',
-              mode: 'cors',
-              body: {
+              method: 'POST',
+              headers: { "Content-Type": "application/json" },
+              mode: 'no-cors',
+              body: JSON.stringify({
                 "email":email,
                 "password":password,
                 "tasks":[]
-              }
+              })
             }).then(response => response.json())
-              .then(json => console.log(json));
-            setResult("Signed Up successfully");
+            .then(json => setRes(json));
+              setResult("Signed Up successfully");
+              setTimeout(() => {
+                navigation.navigate('Login');
+              }, 1500);
           }
           catch(err){
             setResult("Couldn't sign up try again later");

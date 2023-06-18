@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const LogIn = () => {
+const LogIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [res, setRes] = useState("");
   const [result, setResult] = useState("...");
   return (
     <View style={styles.container}>
@@ -37,15 +38,22 @@ const LogIn = () => {
       <TouchableOpacity style={styles.loginBtn} onPress={() => {
           try{
             fetch('http://192.168.1.5:3000/login', {
-              method: 'post',
-              mode: 'cors',
-              body: {
+              method: 'POST',
+              headers: { "Content-Type": "application/json" },
+              mode: 'no-cors',
+              body: JSON.stringify({
                 "email":email,
                 "password":password,
-              }
+              })
             }).then(response => response.json())
-              .then(json => console.log(json));
-            setResult("Logged In successfully");
+              .then(json => setRes(json));
+            if(res.message != "Login Successful" || res == ""){
+              setResult(res.message);
+            }
+            else{
+              navigation.navigate('Todo', {res});
+              setResult("Logged In successfully");
+            }
           }
           catch(err){
             setResult("Couldn't Log in try again later");
